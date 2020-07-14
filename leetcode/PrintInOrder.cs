@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace leetcode
@@ -28,6 +26,31 @@ namespace leetcode
         public void Third(Action printThird)
         {
             while (_i == 0 || _i == 1) { }
+            printThird();
+        }
+    }
+
+    public class PrintInOrderEvent
+    {
+        private AutoResetEvent _autoResetEvent1 = new AutoResetEvent(false);
+        private AutoResetEvent _autoResetEvent2 = new AutoResetEvent(false);
+
+        public void First(Action printFirst)
+        {
+            printFirst();
+            _autoResetEvent1.Set();
+        }
+
+        public void Second(Action printSecond)
+        {
+            _autoResetEvent1.WaitOne();
+            printSecond();
+            _autoResetEvent2.Set();
+        }
+
+        public void Third(Action printThird)
+        {
+            _autoResetEvent2.WaitOne();
             printThird();
         }
     }
